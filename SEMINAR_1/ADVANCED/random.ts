@@ -44,7 +44,7 @@ const dinner = {
       }
     ],
     menubar: ['뿌링클', '콘소메이징', '허니콤보', '고추바사삭', '황올반반', '고추마요'],
-    shuffle(array: Array<Object>) : Array<Object> {
+    shuffle(array: Object[]) : Object[] {
 
         array.sort(() => Math.random() - 0.5);
         return array;
