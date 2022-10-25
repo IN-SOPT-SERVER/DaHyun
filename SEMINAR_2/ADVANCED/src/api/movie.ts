@@ -1,5 +1,5 @@
 import express, {Request, Response, Router} from "express";
-import Movie from "./interface/movie";
+import Movie from "./interface/Movie";
 import Comment from "./interface/Comment";
 
 const router: Router = express.Router();
