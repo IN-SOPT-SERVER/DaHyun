@@ -1,5 +1,5 @@
 import express, {Request, Response, Router} from "express";
-import Member from "./interface/member";
+import Member from "./interface/Member";
 
 const router: Router = express.Router();
 

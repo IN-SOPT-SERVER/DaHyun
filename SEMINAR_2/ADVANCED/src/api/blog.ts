@@ -1,5 +1,5 @@
 import express, {Request, Response, Router} from "express";
-import Blog from "./interface/blog";
+import Blog from "./interface/Blog";
 import User from "./interface/User";
 import Comment from "./interface/Comment";
 
