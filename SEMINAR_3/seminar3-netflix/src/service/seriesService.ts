@@ -1,4 +1,5 @@
 const data = require('../data/data.json');
+require('dotenv').config();
 
 const getSeriesData = async(seriesId : string) => {
     if (!data[seriesId]) return null;      //JSON.parse는 undefined 사용 못한대서

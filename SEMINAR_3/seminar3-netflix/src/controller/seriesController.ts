@@ -14,7 +14,8 @@ const getSeries = async(req: Request, res: Response) => {
     return res.status(200).json({
         status: 200,
         message: `Get seriesId:${seriesId} succeed`,
-        data: obj.info,    
+        data: obj.info,
+        image: process.env.AWS_S3_IMAGE_URL
     })
 }
 
