@@ -15,6 +15,8 @@ model User {
 }
 
 model User2 {
-  id   Int @id @default(autoincrement())
+  id     Int     @id @default(autoincrement())
   userId String
+  email  String? @db.VarChar(50)
+  age    Int?
 }
