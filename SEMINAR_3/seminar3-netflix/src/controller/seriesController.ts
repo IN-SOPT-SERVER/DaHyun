@@ -5,12 +5,14 @@ import { getSeriesData, postEvaluateData, postMyListData, deleteMyListData } fro
 const getSeries = async(req: Request, res: Response) => {
     const seriesId = req.params.seriesId;
     const obj = JSON.parse(JSON.stringify(await getSeriesData(seriesId)));
+    // ===     const obj = await getSeriesData(seriesId);
     if (!obj) {
         return res.status(404).json({
             status: 404,
             message: `SeriesId : ${seriesId} NOT FOUND`,
         });
     }
+    console.log(obj.info.actor);
     return res.status(200).json({
         status: 200,
         message: `Get seriesId:${seriesId} succeed`,
