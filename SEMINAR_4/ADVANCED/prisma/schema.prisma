@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Episode {
+  id          Int           @id @default(autoincrement())
+  plot        String?
+  runningTime Int           @db.SmallInt
+  productId   Int
+  Product     Product       @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "episode_product_id_fk")
+  episodeUser episodeUser[]
+  productUser productUser[] @ignore
+}
+
+model Product {
+  id           Int           @id @default(autoincrement())
+  title        String        @db.VarChar(100)
+  actor        String[]      @db.VarChar(50)
+  genre        String[]      @db.VarChar(50)
+  feature      String[]      @db.VarChar(50)
+  releasedYear Int           @db.SmallInt
+  ageLimit     Int
+  Episode      Episode[]
+  episodeUser  episodeUser[]
+  productUser  productUser[] @ignore
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  userId      String        @unique @db.VarChar(50)
+  userPw      String        @unique @db.VarChar(50)
+  nickname    String        @db.VarChar(30)
+  productUser productUser[] @ignore
+}
+
+model episodeUser {
+  id        Int     @id @default(autoincrement())
+  episodeId Int
+  userId    Int
+  watchTime Int     @db.SmallInt
+  Episode   Episode @relation(fields: [episodeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "episodeuser_episode_id_fk")
+  Product   Product @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "episodeuser_product_id_fk")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model productUser {
+  toMyList  Boolean @default(false)
+  evalNum   Int?
+  userId    Int
+  epiId     Int
+  productId Int
+  Episode   Episode @relation(fields: [epiId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productuser_epi_id_fk")
+  Product   Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productuser_prod_id_fk")
+  User      User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productuser_user_id_fk")
+
+  @@ignore
+}
