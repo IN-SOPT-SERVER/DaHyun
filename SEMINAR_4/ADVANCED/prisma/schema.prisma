@@ -17,7 +17,7 @@ model Episode {
 }
 
 model Product {
-  id           Int          @id @default(autoincrement())
+  id           Int          @id @unique @default(autoincrement())
   title        String       @db.VarChar(100)
   actor        String[]     @db.VarChar(50)
   genre        String[]     @db.VarChar(50)
@@ -25,6 +25,8 @@ model Product {
   releasedYear Int          @db.SmallInt
   ageLimit     Int
   image        String?      @db.VarChar(200)
+  starUserList Int?         @unique
+  User         User?        @relation(fields: [starUserList], references: [id], onDelete: Cascade, map: "product_staruserlist_id_fk")
   Episode      Episode[]
   episodeUser  episodeUser?
   productUser  productUser?
@@ -35,6 +37,7 @@ model User {
   userID      String       @db.VarChar(50)
   userPw      String       @unique @db.VarChar(50)
   nickname    String       @db.VarChar(30)
+  Product     Product?
   episodeUser episodeUser?
   productUser productUser?
 }
@@ -51,10 +54,8 @@ model episodeUser {
 }
 
 model productUser {
-  toMyList  Boolean @default(false)
   evalNum   Int?
   userId    Int     @unique
-  epiId     Int     @unique
   productId Int     @unique
   Product   Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productuser_prod_id_fk")
   User      User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productuser_user_id_fk")
