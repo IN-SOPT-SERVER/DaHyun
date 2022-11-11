@@ -25,7 +25,7 @@ model Product {
   releasedYear Int          @db.SmallInt
   ageLimit     Int
   image        String?      @db.VarChar(200)
-  starUserList Int?         @unique
+  starUserList Int         @unique
   User         User?        @relation(fields: [starUserList], references: [id], onDelete: Cascade, map: "product_staruserlist_id_fk")
   Episode      Episode[]
   episodeUser  episodeUser?
