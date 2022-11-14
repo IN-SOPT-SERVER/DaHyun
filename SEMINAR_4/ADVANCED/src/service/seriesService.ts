@@ -37,7 +37,6 @@ const createEvaluation = async(productId: number, userId: number, evalNum: numbe
 
 
 const updateMyList = async(userList: number[], productId: number) => {
-    console.log(userList);
     const data = await prisma.product.update({
         where: {
             id: productId
@@ -62,6 +61,7 @@ const updateEpi = async(epiId: number, plot: string, runningTime:number) => {
     })
 }
 
+
 const deleteEpi = async(epiId: number) => {
     await prisma.episode.delete({
         where: {
@@ -70,6 +70,8 @@ const deleteEpi = async(epiId: number) => {
     })
 }
 
+
+
 const seriesService = {
     getProductById,
     getEpiUser,
@@ -77,7 +79,6 @@ const seriesService = {
     updateMyList,
     updateEpi,
     deleteEpi,
-
 };
 
 export default seriesService;

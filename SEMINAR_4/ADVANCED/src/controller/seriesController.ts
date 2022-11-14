@@ -43,8 +43,24 @@ const updateStartUserList = async(req: Request, res: Response) => {
    productObj.starUserList.push(+userId);     //현재 찜한 유저들의 id 담긴 리스트에 userId 추가 
    
    const data = await seriesService.updateMyList(productObj.starUserList, +productId);
-   return res.status(200).json({status: 200, message: "찜 리스트 수정 성공", data});
+   return res.status(200).json({status: 200, message: "찜 리스트 추가 성공", data});
    
+}
+
+//* 찜 취소 
+const deleteMyList = async(req: Request, res: Response) => {
+   const { userId, productId } = req.params;
+
+   const productObj = await seriesService.getProductById(+productId);
+   if (!productObj) return res.status(404).json({status: 404, message: "NOT FOUND"});
+   
+   const idx = productObj.starUserList.indexOf(+userId);   //userId의 인덱스
+   productObj.starUserList.splice(idx, 1);     //현재 찜한 유저들의 id 담긴 리스트에 userId 삭제
+   //! splice(배열 변경 시작할 인덱스, 제거할 요소 수)
+
+   const data = await seriesService.updateMyList(productObj.starUserList, +productId);
+   return res.status(200).json({status: 200, message: "찜 리스트 삭제 성공", data});
+
 }
 
 //* 에피소드 수정 
@@ -59,6 +75,8 @@ const updateEpisode = async(req: Request, res: Response) => {
 
 }
 
+
+
 //* 에피소드 삭제 
 const deleteEpisode = async(req: Request, res: Response) => {
     const { episodeId } = req.params
@@ -67,20 +85,16 @@ const deleteEpisode = async(req: Request, res: Response) => {
     return res.status(200).json({status:200, message: "EPISODE 삭제 성공"});
 }
 
-//* 찜 취소 
-const deleteMyList = async(req: Request, res: Response) => {
-   
-}
-
 
 const seriesController = {
     getProduct, 
     getEpiUserInfo, 
     postEvaluation, 
     updateStartUserList, 
+    deleteMyList, 
     updateEpisode, 
     deleteEpisode,
-    deleteMyList
+    
 };
 
 export default seriesController;

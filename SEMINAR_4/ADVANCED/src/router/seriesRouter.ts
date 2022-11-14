@@ -10,8 +10,10 @@ router.post('/isEvaluate/:userId/:productId', seriesController.postEvaluation); 
 
 router.patch('/toMyList/:userId/:productId', seriesController.updateStartUserList);   //* 작품을 찜함 
 router.patch('/episode/:episodeId', seriesController.updateEpisode); //* 에피소드 정보 수정 
+router.patch('/notMyList/:userId/:productId', seriesController.deleteMyList);  //* 찜 취소
+
 
 router.delete('/episode/:episodeId', seriesController.deleteEpisode);  //* 에피소드 삭제 
-router.delete('/notMyList/:userId/:productId', seriesController.deleteMyList);  //* 찜 취소
+
 
 export default router;
