@@ -35,18 +35,20 @@ const createEvaluation = async(productId: number, userId: number, evalNum: numbe
     return data;
 }; 
 
-/**  
-const updateMyList = async(userId: number, productId: number) => {
+
+const updateMyList = async(userList: number[], productId: number) => {
+    console.log(userList);
     const data = await prisma.product.update({
         where: {
             id: productId
         },
         data: {
-            starUserList: 
+            starUserList: userList
         }
     })
 
-} */
+    return data;
+} 
 
 const updateEpi = async(epiId: number, plot: string, runningTime:number) => {
     const episode = await prisma.episode.update({
@@ -72,7 +74,7 @@ const seriesService = {
     getProductById,
     getEpiUser,
     createEvaluation,
-    //updateMyList,
+    updateMyList,
     updateEpi,
     deleteEpi,
 

@@ -9,9 +9,9 @@ router.get('/:userId/:productId/:episodeId', seriesController.getEpiUserInfo);  
 router.post('/isEvaluate/:userId/:productId', seriesController.postEvaluation);  //* 싫어요(0) / 좋아요(1) / 최고예요(2)
 
 router.patch('/toMyList/:userId/:productId', seriesController.updateStartUserList);   //* 작품을 찜함 
-router.patch('/episode/:epiId', seriesController.updateEpisode); //* 에피소드 정보 수정 
+router.patch('/episode/:episodeId', seriesController.updateEpisode); //* 에피소드 정보 수정 
 
-router.delete('/episode/:epiId', seriesController.deleteEpisode);  //* 에피소드 삭제 
+router.delete('/episode/:episodeId', seriesController.deleteEpisode);  //* 에피소드 삭제 
 router.delete('/notMyList/:userId/:productId', seriesController.deleteMyList);  //* 찜 취소
 
 export default router;

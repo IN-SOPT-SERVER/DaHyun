@@ -37,27 +37,32 @@ const postEvaluation = async(req: Request, res: Response) => {
 const updateStartUserList = async(req: Request, res: Response) => {
    const { userId, productId } = req.params;
 
-   const data = await seriesService.updateMyList(+userId, +productId);
+   const productObj = await seriesService.getProductById(+productId);
+   if (!productObj) return res.status(404).json({status: 404, message: "NOT FOUND"});
+ 
+   productObj.starUserList.push(+userId);     //현재 찜한 유저들의 id 담긴 리스트에 userId 추가 
    
+   const data = await seriesService.updateMyList(productObj.starUserList, +productId);
+   return res.status(200).json({status: 200, message: "찜 리스트 수정 성공", data});
    
 }
 
 //* 에피소드 수정 
 const updateEpisode = async(req: Request, res: Response) => {
-   const { epiId } = req.params;
+   const { episodeId } = req.params;
    const { plot, runningTime } = req.body;
 
    if (!plot || !runningTime) return res.status(400).json({status: 400, message: "PLOT / RUNNING-TIME 없음"})
 
-   const data = await seriesService.updateEpi(+epiId, plot, runningTime);
+   const data = await seriesService.updateEpi(+episodeId, plot, runningTime);
    return res.status(200).json({status: 200, message: "EPISODE 수정 성공", data});
 
 }
 
 //* 에피소드 삭제 
 const deleteEpisode = async(req: Request, res: Response) => {
-    const { epiId } = req.params
-    await seriesService.deleteEpi(+epiId);
+    const { episodeId } = req.params
+    await seriesService.deleteEpi(+episodeId);
 
     return res.status(200).json({status:200, message: "EPISODE 삭제 성공"});
 }

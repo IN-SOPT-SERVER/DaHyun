@@ -25,8 +25,7 @@ model Product {
   releasedYear Int          @db.SmallInt
   ageLimit     Int
   image        String?      @db.VarChar(200)
-  starUserList Int         @unique
-  User         User?        @relation(fields: [starUserList], references: [id], onDelete: Cascade, map: "product_staruserlist_id_fk")
+  starUserList Int[]
   Episode      Episode[]
   episodeUser  episodeUser?
   productUser  productUser?
@@ -35,9 +34,8 @@ model Product {
 model User {
   id          Int          @id @default(autoincrement())
   userID      String       @db.VarChar(50)
-  userPw      String       @unique @db.VarChar(50)
+  userPw      String       @db.VarChar(50)
   nickname    String       @db.VarChar(30)
-  Product     Product?
   episodeUser episodeUser?
   productUser productUser?
 }
@@ -49,14 +47,14 @@ model episodeUser {
   watchTime Int     @db.SmallInt
   productId Int     @unique
   Episode   Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade, map: "episodeuser_episode_id_fk")
-  Product   Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "episodeuser_prod_id_fk")
-  User      User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "episodeuser_user_id_fk")
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, map: "episodeuser_prod_id_fk")
+  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "episodeuser_user_id_fk")
 }
 
 model productUser {
   evalNum   Int?
   userId    Int     @unique
   productId Int     @unique
-  Product   Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productuser_prod_id_fk")
-  User      User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "productuser_user_id_fk")
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productuser_prod_id_fk")
+  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "productuser_user_id_fk")
 }
