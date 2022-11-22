@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Episode {
+  id          Int           @id @default(autoincrement())
+  plot        String?
+  runningTime Int           @db.SmallInt
+  productId   Int
+  Product     Product       @relation(fields: [productId], references: [id], onDelete: Cascade, map: "episode_product_id_fk")
+  episodeUser episodeUser[]
+}
+
+model Product {
+  id           Int          @id @unique @default(autoincrement())
+  title        String       @db.VarChar(100)
+  actor        String[]     @db.VarChar(50)
+  genre        String[]     @db.VarChar(50)
+  feature      String[]     @db.VarChar(50)
+  releasedYear Int          @db.SmallInt
+  ageLimit     Int
+  image        String?      @db.VarChar(200)
+  starUserList Int[]
+  Episode      Episode[]
+  episodeUser  episodeUser?
+  productUser  productUser?
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  userID      String       @db.VarChar(50)
+  userPw      String       @db.VarChar(50)
+  nickname    String       @db.VarChar(30)
+  episodeUser episodeUser?
+  productUser productUser?
+}
+
+model episodeUser {
+  id        Int     @id @default(autoincrement())
+  episodeId Int
+  userId    Int     @unique
+  watchTime Int     @db.SmallInt
+  productId Int     @unique
+  Episode   Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade, map: "episodeuser_episode_id_fk")
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, map: "episodeuser_prod_id_fk")
+  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "episodeuser_user_id_fk")
+}
+
+model productUser {
+  evalNum   Int?
+  userId    Int     @unique
+  productId Int     @unique
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productuser_prod_id_fk")
+  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "productuser_user_id_fk")
+}
