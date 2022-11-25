@@ -68,7 +68,7 @@ const createUser = async (userCreateDto: UserCreateDTO) => {
 
 //* 유저 수정
 const updateUser = async (userId: number, email: string) => {
-  const user = await prisma.user.update({
+  const data = await prisma.user.update({
     where: {
       id: userId,
     },
@@ -77,7 +77,7 @@ const updateUser = async (userId: number, email: string) => {
     },
   });
 
-  return user;
+  return data;
 }
 
 const deleteUser = async (userId: number) => {

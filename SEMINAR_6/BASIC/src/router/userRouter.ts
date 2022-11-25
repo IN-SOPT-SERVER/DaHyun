@@ -8,7 +8,7 @@ const router: Router = Router();
 //* 특정 유저 조회 - [GET] /user/:userId
 router.get("/:userId", auth, userController.getUserById);
 //* 전체 유저 조회 - [GET] /user/
-router.get("/", userController.getUser);
+router.get("/", auth, userController.getUser);
 //* 로그인 - [POST] /user/signin
 router.post(
     "/signin",
@@ -26,8 +26,8 @@ router.post(
     [body("name").notEmpty(), body("email").notEmpty(), body("password").isLength({ min: 6 })],
     userController.createUser);
 //* 유저 수정 - [PATCH] /user/:userId
-router.patch("/:userId", userController.updateUser);
+router.patch("/update", auth, userController.updateUser);
 //* 유저 삭제 - [DELETE] /user/:uesrId
-router.delete("/:userId", userController.deleteUser);
+router.delete("/:userId", auth, userController.deleteUser);
 
 export default router;

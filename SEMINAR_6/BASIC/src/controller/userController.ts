@@ -1,3 +1,5 @@
+import { UserDeleteDTO } from './../interfaces/UserDeleteDTO';
+import { UserUpdateDTO } from './../interfaces/UserUpdateDTO';
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { rm, sc } from "../constants";
@@ -12,18 +14,17 @@ import { userService } from "../service";
 const getUserById = async (req: Request, res: Response) => {
   const { userId } = req.params;
 
-  const data = await userService.getUserById(+userId);   //!   ===   userService.getUserById(Number(userId))
+  const data = await userService.getUserById(+userId);   //   ===   userService.getUserById(Number(userId))
   
-  if (!data) {
-    return res.status(404).json({ status: 404, message: "NOT_FOUND" });
-  }
-  return res.status(200).json({ status: 200, message: "유저 조회 성공", data });
+  if (!data) return res.status(sc.NO_CONTENT).send(fail(sc.NO_CONTENT, rm.NO_USER));
+  return res.status(sc.OK).send(success(sc.OK, rm.READ_USER_SUCCESS, data));
 };
 
 //* [GET] 전체 유저 조회
 const getUser = async (req: Request, res: Response) => {
   const data = await userService.getUser();
-  return res.status(200).json({ status: 200, message: "전체 유저 조회 성공", data});
+
+  return res.status(sc.OK).send(success(sc.OK, rm.READ_ALL_USERS_SUCCESS, data));
 };
 
 //* 로그인
@@ -87,21 +88,25 @@ const createUser = async (req: Request, res: Response) => {
 
 //* [UPDATE] 유저 수정
 const updateUser = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  const { email } = req.body;
+  const userUpdateDTO: UserUpdateDTO = req.body;
   
-  if (!email) return res.status(400).json({status: 400, message: "유저 수정 실패"});
-  const data = await userService.updateUser(Number(userId), email);
-  return res.status(200).json({status: 200, message: "유저 수정 성공", data});
-
-};
+  if (!userUpdateDTO.email) return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST));
+  
+  const data = await userService.updateUser(userUpdateDTO.userId, userUpdateDTO.email);
+  return res.status(sc.OK).send(success(sc.OK, rm.UPDATE_USER_SUCCESS, data));
+}
 
 //* [DELETE] 유저 삭제
 const deleteUser = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  await userService.deleteUser(+userId);
+  const userDeleteDTO: UserDeleteDTO = req.body;
 
-  return res.status(200).json({status: 200, message: "유저 삭제 성공"});
+  try{
+    await userService.deleteUser(userDeleteDTO.userId);
+    return res.status(sc.OK).send(success(sc.OK, rm.DELETE_USER_SUCCESS));
+  }
+  catch{
+    return res.status(sc.INTERNAL_SERVER_ERROR).send(fail(sc.INTERNAL_SERVER_ERROR, rm.DELETE_USER_FAIL));
+  }
 };
 
 
