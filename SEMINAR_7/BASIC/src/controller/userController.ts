@@ -1,11 +1,8 @@
-import { UserDeleteDTO } from './../interfaces/UserDeleteDTO';
-import { UserUpdateDTO } from './../interfaces/UserUpdateDTO';
+import { UserCreateDTO, UserDeleteDTO, UserSignInDTO, UserUpdateDTO } from '../interfaces';
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { rm, sc } from "../constants";
 import { fail, success } from "../constants/response";
-import { UserCreateDTO } from "../interfaces/user/UserCreateDTO";
-import { UserSignInDTO } from "../interfaces/UserSignInDTO";
 import jwtHandler from "../modules/jwtHandler";
 import { userService } from "../service";
 
@@ -22,10 +19,12 @@ const getUserById = async (req: Request, res: Response) => {
 
 //* [GET] 전체 유저 조회
 const getUser = async (req: Request, res: Response) => {
-  const data = await userService.getUser();
+  const { page, limit } = req.query;
+  const data = await userService.getUser(Number(page), Number(limit));
 
   return res.status(sc.OK).send(success(sc.OK, rm.READ_ALL_USERS_SUCCESS, data));
 };
+
 
 //* 로그인
 const signInUser = async (req: Request, res: Response) => {

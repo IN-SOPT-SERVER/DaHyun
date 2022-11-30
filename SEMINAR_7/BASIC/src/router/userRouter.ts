@@ -5,6 +5,7 @@ import { auth } from "../middlewares";
 
 const router: Router = Router();
 
+
 //* 특정 유저 조회 - [GET] /user/:userId
 router.get("/:userId", auth, userController.getUserById);
 //* 전체 유저 조회 - [GET] /user/

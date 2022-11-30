@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { UserCreateDTO } from "../interfaces/user/UserCreateDTO";
+import { UserCreateDTO, UserSignInDTO } from "../interfaces";
 import bcrypt from "bcryptjs";
-import { UserSignInDTO } from "../interfaces/UserSignInDTO";
 import { sc } from "../constants";
 
 const prisma = new PrismaClient();
@@ -21,8 +20,14 @@ const getUserById = async (userId: number) => {
 
 
 //* 전체 유저 조회
-const getUser = async () => {
-  return await prisma.user.findMany();
+const getUser = async (page: number, limit: number) => {
+  
+  const data = await prisma.user.findMany({
+    skip: (page-1) * limit,  
+    take: limit, 
+  });
+
+  return data;
 };
 
 //* 로그인
