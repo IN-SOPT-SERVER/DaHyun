@@ -10,7 +10,7 @@ const getProduct = async(req: Request, res: Response) => {
    const data = await seriesService.getProductById(+productId);
 
    if (!data) return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.NO_PRODUCT));
-   return res.status(sc.OK).send(success(sc.OK, rm.GET_PRODUCT_SUCCESS));
+   return res.status(sc.OK).send(success(sc.OK, rm.GET_PRODUCT_SUCCESS, data));
 }
 
 //* 유저가 작품의 특정 에피소드를 얼마나 봤는지 조회 

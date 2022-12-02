@@ -32,8 +32,36 @@ const postContent = async(location: string, contentDTO: contentCreateDTO) => {
     return result;
 };
 
+const searchContent = async(keyword: string, option: string[]) => {
+    
+    if (!option) {
+        return await prisma.product.findMany({
+            where: {
+                title: {
+                    contains: keyword
+                },
+            },
+        });
+    }
+
+    const contentList = await prisma.product.findMany({
+        where: {
+            title: {
+                contains: keyword
+            },
+            actor: {
+                hasSome: option,
+            }
+        }
+    });
+
+    return contentList;
+};
+
+
 const contentService = {
     postContent,
+    searchContent,
 };
 
 export default contentService;
