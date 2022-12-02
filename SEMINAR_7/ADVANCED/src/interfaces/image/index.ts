@@ -1,0 +1,1 @@
+export { default as imageCreateDTO } from './ImageCreateDTO';

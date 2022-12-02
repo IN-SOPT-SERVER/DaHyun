@@ -24,11 +24,20 @@ model Product {
   feature      String[]     @db.VarChar(50)
   releasedYear Int          @db.SmallInt
   ageLimit     Int
-  image        String?      @db.VarChar(200)
   starUserList Int[]
   Episode      Episode[]
+  Image        Image[]
   episodeUser  episodeUser?
   productUser  productUser?
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  image     String?  @db.VarChar(800)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  productId Int
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, map: "image_product_id_fk")
 }
 
 model User {
@@ -36,8 +45,8 @@ model User {
   userID      String       @unique @db.VarChar(100)
   userPw      String       @db.VarChar(400)
   nickname    String       @unique @db.VarChar(30)
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   episodeUser episodeUser?
   productUser productUser?
 }
