@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { rm, sc } from '../constants';
 import { fail, success } from '../constants/response';
-import { contentCreateDTO, contentCreateReturnDTO } from '../interfaces';
+import { contentCreateDTO, searchContentDTO } from '../interfaces';
 import { contentService } from '../service';
 
 //! content 등록
@@ -19,10 +19,13 @@ const createContent = async(req: Request, res: Response) => {
 };
 
 //! content 검색 
+//! /content/search&keyword=제목키워드&option=배우1&option=배우2
 const searchContent = async(req: Request, res:Response) => {
-    const { keyword, option } = req.query;
-    
-    const data = await contentService.searchContent(keyword as string, option as unknown as string[]);
+
+    const  contentDTO:searchContentDTO = req.query as any;
+    //~ const { keyword, option, page, limit } = req.query;
+    const data = await contentService.searchContent(contentDTO);
+    //~ const data = await contentService.searchContent(keyword as string, option as unknown as string[], Number(page), Number(limit));
     if (!data) return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.NO_PRODUCT));
 
     return res.status(sc.OK).send(success(sc.OK, rm.GET_PRODUCT_SUCCESS, data));

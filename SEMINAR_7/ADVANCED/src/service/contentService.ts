@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { Result } from 'express-validator';
-import { contentCreateDTO, contentCreateReturnDTO } from '../interfaces';
+import { contentCreateDTO, contentCreateReturnDTO, searchContentDTO } from '../interfaces';
 const prisma = new PrismaClient();
 
 const postContent = async(location: string, contentDTO: contentCreateDTO) => {
-    console.log(contentDTO);
+
     const content = await prisma.product.create({
         data: {
             title: contentDTO.title,
@@ -32,27 +32,38 @@ const postContent = async(location: string, contentDTO: contentCreateDTO) => {
     return result;
 };
 
-const searchContent = async(keyword: string, option: string[]) => {
-    
-    if (!option) {
+const searchContent = async(searchDTO: searchContentDTO) => {
+    const page = Number(searchDTO.page);
+    const limit = Number(searchDTO.limit);
+
+    //! option = []인 경우 
+    if (!searchDTO.option) {
         return await prisma.product.findMany({
             where: {
                 title: {
-                    contains: keyword
+                    contains: searchDTO.keyword
                 },
             },
         });
     }
 
+    //! option = ['배우1', '배우2'] 같은 경우 
     const contentList = await prisma.product.findMany({
         where: {
             title: {
-                contains: keyword
+                contains: searchDTO.keyword
             },
             actor: {
-                hasSome: option,
+                hasSome: searchDTO.option,
             }
-        }
+        },
+        skip: (page-1)*limit,
+        take: limit,
+        select: {
+            id: true,
+            title: true,
+            actor: true,
+        },
     });
 
     return contentList;
@@ -65,3 +76,4 @@ const contentService = {
 };
 
 export default contentService;
+
